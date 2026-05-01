@@ -19,22 +19,22 @@ class AddHabitSheet extends ConsumerStatefulWidget {
 class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
   final _nameController = TextEditingController();
   
-  final _colors = [
-    AppColors.coral,
-    AppColors.ocean,
-    AppColors.forest,
-    AppColors.gold,
-    AppColors.violet,
-    AppColors.navy,
+  final List<Color> _colors = [
+    AppColors.habitRed,
+    AppColors.habitGreen,
+    AppColors.habitPink,
+    AppColors.habitBlue,
+    AppColors.habitPurple,
+    AppColors.habitOrange,
   ];
   
-  final _bgColors = {
-    AppColors.coral: AppColors.coralBg,
-    AppColors.ocean: AppColors.oceanBg,
-    AppColors.forest: AppColors.forestBg,
-    AppColors.gold: AppColors.goldBg,
-    AppColors.violet: AppColors.violetBg,
-    AppColors.navy: AppColors.navyBg,
+  final Map<Color, Color> _bgColors = {
+    AppColors.habitRed: AppColors.habitRedBg,
+    AppColors.habitGreen: AppColors.habitGreenBg,
+    AppColors.habitPink: AppColors.habitPinkBg,
+    AppColors.habitBlue: AppColors.habitBlueBg,
+    AppColors.habitPurple: AppColors.habitPurpleBg,
+    AppColors.habitOrange: AppColors.habitOrangeBg,
   };
 
   final _icons = [
