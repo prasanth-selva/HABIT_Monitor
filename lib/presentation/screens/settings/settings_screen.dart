@@ -36,7 +36,12 @@ class SettingsScreen extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.info_outline),
             title: const Text('About'),
-            subtitle: const Text('Streakly Habit Tracker v1.0.0'),
+            subtitle: const Text(
+              'Streakly Habit Tracker v1.0.0\n'
+              'Developed by Cyberbots\n'
+              'Founder: Prasanth',
+            ),
+            isThreeLine: true,
           ),
         ],
       ),
