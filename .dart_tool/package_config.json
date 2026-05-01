@@ -128,6 +128,12 @@
       "languageVersion": "3.4"
     },
     {
+      "name": "confetti",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/confetti-0.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "convert",
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/convert-3.1.2",
       "packageUri": "lib/",
@@ -150,6 +156,12 @@
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/dart_style-2.3.6",
       "packageUri": "lib/",
       "languageVersion": "3.0"
+    },
+    {
+      "name": "dbus",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/dbus-0.7.12",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "equatable",
@@ -204,6 +216,24 @@
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/flutter_lints-3.0.2",
       "packageUri": "lib/",
       "languageVersion": "3.1"
+    },
+    {
+      "name": "flutter_local_notifications",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/flutter_local_notifications-17.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_linux",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/flutter_local_notifications_linux-4.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "flutter_local_notifications_platform_interface",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/flutter_local_notifications_platform_interface-7.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
     },
     {
       "name": "flutter_riverpod",
@@ -286,6 +316,12 @@
     {
       "name": "hive_generator",
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/hive_generator-2.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "home_widget",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/home_widget-0.6.0",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -620,6 +656,12 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "simple_gesture_detector",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/simple_gesture_detector-0.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///home/prasanth/.cache/flutter_sdk/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -674,6 +716,12 @@
       "languageVersion": "3.1"
     },
     {
+      "name": "table_calendar",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/table_calendar-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "term_glyph",
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/term_glyph-1.2.2",
       "packageUri": "lib/",
@@ -684,6 +732,12 @@
       "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/test_api-0.7.10",
       "packageUri": "lib/",
       "languageVersion": "3.7"
+    },
+    {
+      "name": "timezone",
+      "rootUri": "file:///home/prasanth/.pub-cache/hosted/pub.dev/timezone-0.9.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
     },
     {
       "name": "timing",
