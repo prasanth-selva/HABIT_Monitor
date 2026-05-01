@@ -1,0 +1,40 @@
+# Flutter/Dart/Pub
+.dart_tool/
+.packages
+pubspec.lock
+/.idea/
+.vscode/
+*.iml
+
+# Build outputs
+build/
+ios/Flutter/Flutter.framework
+ios/Flutter/Flutter.podspec
+ios/Flutter/Generated.xcconfig
+
+# Generated plugin registrant
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Native build folders
+android/.gradle
+android/app/*.keystore
+
+# Flutter generated files
+generated_plugin_registrant.dart
+
+# Local environment
+.env
+
+# Editor folders
+/.idea
+/.vscode
+
+# Misc
+*.swp
