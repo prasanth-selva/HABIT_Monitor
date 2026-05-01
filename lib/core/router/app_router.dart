@@ -6,6 +6,13 @@ import '../../presentation/screens/monthly/monthly_screen.dart';
 import '../../presentation/screens/yearly/yearly_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
 
+class PlaceholderScreen extends StatelessWidget {
+  final String title;
+  const PlaceholderScreen({super.key, required this.title});
+  @override
+  Widget build(BuildContext context) => Scaffold(appBar: AppBar(title: Text(title)), body: Center(child: Text(title)));
+}
+
 class AppRouter {
   static final GlobalKey<NavigatorState> _rootNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -23,12 +30,16 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
-            path: '/monthly',
-            builder: (context, state) => const MonthlyScreen(),
+            path: '/mood',
+            builder: (context, state) => const PlaceholderScreen(title: 'Moods'),
           ),
           GoRoute(
-            path: '/yearly',
-            builder: (context, state) => const YearlyScreen(),
+            path: '/finance',
+            builder: (context, state) => const PlaceholderScreen(title: 'Finance'),
+          ),
+          GoRoute(
+            path: '/statistics',
+            builder: (context, state) => const YearlyScreen(), // Map to existing statistics screen
           ),
         ],
       ),
