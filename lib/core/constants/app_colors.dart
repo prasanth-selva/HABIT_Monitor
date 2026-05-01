@@ -2,32 +2,35 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // Brand
-  static const coral     = Color(0xFFE8562A);
-  static const coralBg   = Color(0xFFFAECE7);
-  static const ocean     = Color(0xFF2563C4);
-  static const oceanBg   = Color(0xFFE6F1FB);
-  static const forest    = Color(0xFF1A6B4A);
-  static const forestBg  = Color(0xFFE1F5EE);
-  static const gold      = Color(0xFFC8891A);
-  static const goldBg    = Color(0xFFFAEEDA);
-  static const violet    = Color(0xFF533AB7);
-  static const violetBg  = Color(0xFFEEEDFE);
-  static const navy      = Color(0xFF0C447C);
-  static const navyBg    = Color(0xFFB5D4F4);
+  static const primary       = Color(0xFFD33C61); // Deep Magenta
+  static const primaryLight  = Color(0xFFFBE8EA); // Pastel Pink Background
+  static const background    = Color(0xFFFBE8EA);
 
-  // Light Mode
-  static const bgLight       = Color(0xFFF8F7F4);
-  static const surfaceLight  = Color(0xFFFFFFFF);
-  static const surface2Light = Color(0xFFF1EFE8);
-  static const textLight     = Color(0xFF1A1A18);
-  static const text2Light    = Color(0xFF6B6A65);
-  static const borderLight   = Color(0xFFE0DED6);
+  // Semantic
+  static const success       = Color(0xFF7CC76B); // Green checkmark
+  static const failure       = Color(0xFFF16565); // Red cross
+  static const skipped       = Color(0xFFF1C40F); // Yellow
+  static const neutral       = Color(0xFFE0E0E0); // Grey circle
 
-  // Dark Mode
-  static const bgDark        = Color(0xFF111110);
-  static const surfaceDark   = Color(0xFF1C1C1A);
-  static const surface2Dark  = Color(0xFF252522);
-  static const textDark      = Color(0xFFF0EFE8);
-  static const text2Dark     = Color(0xFF9B9A94);
-  static const borderDark    = Color(0xFF2E2E2A);
+  // Habit Colors
+  static const habitRed      = Color(0xFFE84C74); // Drink Water
+  static const habitGreen    = Color(0xFF75A63F); // Avoid Junk Food
+  static const habitPink     = Color(0xFFF37597); // Read Pages
+  static const habitBlue     = Color(0xFF637CB0); // Workout Session
+  static const habitPurple   = Color(0xFFA15CC8); // Call parents
+  static const habitOrange   = Color(0xFFE88A3B);
+
+  // Background colors for the habit icons
+  static const habitRedBg    = Color(0xFFFDE8EF);
+  static const habitGreenBg  = Color(0xFFEEF5E6);
+  static const habitPinkBg   = Color(0xFFFDEAF0);
+  static const habitBlueBg   = Color(0xFFEAEEF6);
+  static const habitPurpleBg = Color(0xFFF4EBF9);
+  static const habitOrangeBg = Color(0xFFFCECDD);
+
+  // Light Mode Only (Design doesn't show dark mode, assuming mainly light)
+  static const surface       = Color(0xFFFFFFFF);
+  static const text          = Color(0xFF1E1E1E);
+  static const textSecondary = Color(0xFF757575);
+  static const border        = Color(0xFFEEEEEE);
 }
