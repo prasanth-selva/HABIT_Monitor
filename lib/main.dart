@@ -8,8 +8,7 @@ import 'data/datasources/local_datasource.dart';
 import 'data/models/habit_model.dart';
 import 'data/models/completion_model.dart';
 import 'data/models/task_model.dart';
-import 'data/models/mood_model.dart';
-import 'data/models/transaction_model.dart';
+import 'data/models/mood_entry_model.dart';
 import 'presentation/providers/habit_provider.dart';
 
 Future<void> main() async {
@@ -19,8 +18,7 @@ Future<void> main() async {
   Hive.registerAdapter(HabitModelAdapter());
   Hive.registerAdapter(CompletionModelAdapter());
   Hive.registerAdapter(TaskModelAdapter());
-  Hive.registerAdapter(MoodModelAdapter());
-  Hive.registerAdapter(TransactionModelAdapter());
+  Hive.registerAdapter(MoodEntryModelAdapter());
 
   final localDataSource = LocalDataSource();
   await localDataSource.init();

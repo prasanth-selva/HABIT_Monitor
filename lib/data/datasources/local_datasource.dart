@@ -1,38 +1,32 @@
 import 'package:hive/hive.dart';
 import '../models/habit_model.dart';
-import '../models/completion_model.dart';
 import '../models/task_model.dart';
-import '../models/mood_model.dart';
-import '../models/transaction_model.dart';
+import '../models/completion_model.dart';
+import '../models/mood_entry_model.dart';
 
 class LocalDataSource {
   static const String habitBoxName = 'habits';
-  static const String completionBoxName = 'completions';
   static const String taskBoxName = 'tasks';
-  static const String moodBoxName = 'moods';
-  static const String transactionBoxName = 'transactions';
+  static const String completionBoxName = 'completions';
+  static const String moodEntryBoxName = 'moods';
 
   Box<HabitModel> get habitBox => Hive.box<HabitModel>(habitBoxName);
-  Box<CompletionModel> get completionBox => Hive.box<CompletionModel>(completionBoxName);
   Box<TaskModel> get taskBox => Hive.box<TaskModel>(taskBoxName);
-  Box<MoodModel> get moodBox => Hive.box<MoodModel>(moodBoxName);
-  Box<TransactionModel> get transactionBox => Hive.box<TransactionModel>(transactionBoxName);
+  Box<CompletionModel> get completionBox => Hive.box<CompletionModel>(completionBoxName);
+  Box<MoodEntryModel> get moodBox => Hive.box<MoodEntryModel>(moodEntryBoxName);
 
   Future<void> init() async {
     if (!Hive.isBoxOpen(habitBoxName)) {
       await Hive.openBox<HabitModel>(habitBoxName);
     }
-    if (!Hive.isBoxOpen(completionBoxName)) {
-      await Hive.openBox<CompletionModel>(completionBoxName);
-    }
     if (!Hive.isBoxOpen(taskBoxName)) {
       await Hive.openBox<TaskModel>(taskBoxName);
     }
-    if (!Hive.isBoxOpen(moodBoxName)) {
-      await Hive.openBox<MoodModel>(moodBoxName);
+    if (!Hive.isBoxOpen(completionBoxName)) {
+      await Hive.openBox<CompletionModel>(completionBoxName);
     }
-    if (!Hive.isBoxOpen(transactionBoxName)) {
-      await Hive.openBox<TransactionModel>(transactionBoxName);
+    if (!Hive.isBoxOpen(moodEntryBoxName)) {
+      await Hive.openBox<MoodEntryModel>(moodEntryBoxName);
     }
   }
 
@@ -42,6 +36,12 @@ class LocalDataSource {
   Future<void> deleteHabit(String id) async => await habitBox.delete(id);
   Future<void> updateHabit(HabitModel habit) async => await habit.save();
 
+  // Tasks
+  List<TaskModel> getTasks() => taskBox.values.toList();
+  Future<void> addTask(TaskModel task) async => await taskBox.put(task.id, task);
+  Future<void> deleteTask(String id) async => await taskBox.delete(id);
+  Future<void> updateTask(TaskModel task) async => await task.save();
+
   // Completions
   List<CompletionModel> getCompletions() => completionBox.values.toList();
   Future<void> addOrUpdateCompletion(CompletionModel completion) async {
@@ -49,18 +49,8 @@ class LocalDataSource {
     await completionBox.put(key, completion);
   }
 
-  // Tasks
-  List<TaskModel> getTasks() => taskBox.values.toList();
-  Future<void> addTask(TaskModel task) async => await taskBox.put(task.id, task);
-  Future<void> deleteTask(String id) async => await taskBox.delete(id);
-
   // Moods
-  List<MoodModel> getMoods() => moodBox.values.toList();
-  Future<void> addMood(MoodModel mood) async => await moodBox.put(mood.id, mood);
+  List<MoodEntryModel> getMoods() => moodBox.values.toList();
+  Future<void> addMood(MoodEntryModel mood) async => await moodBox.put(mood.id, mood);
   Future<void> deleteMood(String id) async => await moodBox.delete(id);
-
-  // Transactions
-  List<TransactionModel> getTransactions() => transactionBox.values.toList();
-  Future<void> addTransaction(TransactionModel transaction) async => await transactionBox.put(transaction.id, transaction);
-  Future<void> deleteTransaction(String id) async => await transactionBox.delete(id);
 }

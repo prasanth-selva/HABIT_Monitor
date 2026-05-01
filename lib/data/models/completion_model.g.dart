@@ -8,7 +8,7 @@ part of 'completion_model.dart';
 
 class CompletionModelAdapter extends TypeAdapter<CompletionModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 2;
 
   @override
   CompletionModel read(BinaryReader reader) {
@@ -16,22 +16,26 @@ class CompletionModelAdapter extends TypeAdapter<CompletionModel> {
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return CompletionModel()
-      ..dateKey = fields[0] as String
-      ..habitId = fields[1] as String
-      ..isDone = fields[2] as bool;
+    return CompletionModel(
+      dateKey: fields[0] as String,
+      habitId: fields[1] as String,
+      status: fields[2] as int,
+      completedAt: fields[3] as DateTime?,
+    );
   }
 
   @override
   void write(BinaryWriter writer, CompletionModel obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.dateKey)
       ..writeByte(1)
       ..write(obj.habitId)
       ..writeByte(2)
-      ..write(obj.isDone);
+      ..write(obj.status)
+      ..writeByte(3)
+      ..write(obj.completedAt);
   }
 
   @override

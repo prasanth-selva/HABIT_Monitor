@@ -1,41 +1,35 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import '../../domain/entities/habit.dart';
-import '../../domain/repositories/habit_repository.dart';
 import '../../data/datasources/local_datasource.dart';
-import '../../data/repositories/habit_repository_impl.dart';
+import '../../data/models/habit_model.dart';
 
 part 'habit_provider.g.dart';
 
 @Riverpod(keepAlive: true)
 LocalDataSource localDataSource(LocalDataSourceRef ref) {
-  throw UnimplementedError('Initialized in main');
-}
-
-@Riverpod(keepAlive: true)
-HabitRepository habitRepository(HabitRepositoryRef ref) {
-  final dataSource = ref.watch(localDataSourceProvider);
-  return HabitRepositoryImpl(dataSource);
+  throw UnimplementedError('localDataSource must be overridden in ProviderScope');
 }
 
 @riverpod
 class HabitNotifier extends _$HabitNotifier {
   @override
-  List<Habit> build() {
-    return ref.watch(habitRepositoryProvider).getHabits();
+  List<HabitModel> build() {
+    return ref.watch(localDataSourceProvider).getHabits();
   }
 
-  Future<void> addHabit(Habit habit) async {
-    await ref.read(habitRepositoryProvider).addHabit(habit);
-    state = ref.read(habitRepositoryProvider).getHabits();
+  Future<void> addHabit(HabitModel habit) async {
+    await ref.read(localDataSourceProvider).addHabit(habit);
+    state = ref.read(localDataSourceProvider).getHabits();
   }
 
   Future<void> deleteHabit(String id) async {
-    await ref.read(habitRepositoryProvider).deleteHabit(id);
-    state = ref.read(habitRepositoryProvider).getHabits();
+    await ref.read(localDataSourceProvider).deleteHabit(id);
+    state = ref.read(localDataSourceProvider).getHabits();
   }
 
-  Future<void> reorderHabits(int oldIndex, int newIndex) async {
-    await ref.read(habitRepositoryProvider).reorderHabits(oldIndex, newIndex);
-    state = ref.read(habitRepositoryProvider).getHabits();
+  Future<void> archiveHabit(String id) async {
+    final habit = state.firstWhere((h) => h.id == id);
+    habit.isArchived = true;
+    await ref.read(localDataSourceProvider).updateHabit(habit);
+    state = ref.read(localDataSourceProvider).getHabits();
   }
 }
