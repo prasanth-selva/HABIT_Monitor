@@ -5,6 +5,9 @@ import '../../../core/constants/app_dimensions.dart';
 import 'widgets/week_calendar_strip.dart';
 import 'widgets/category_pills.dart';
 import 'widgets/habit_task_card.dart';
+import '../../providers/habit_provider.dart';
+import '../../providers/completion_provider.dart';
+import 'package:intl/intl.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -15,12 +18,28 @@ class HomeScreen extends ConsumerStatefulWidget {
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
   DateTime _selectedDate = DateTime.now();
-  String _selectedCategory = 'Other';
+  String _selectedCategory = 'All';
 
-  final _categories = ['Other', 'Health', 'Study', 'Work', 'Home', 'Art'];
+  final _categories = ['All', 'Health', 'Study', 'Work', 'Home', 'Art', 'Other'];
 
   @override
   Widget build(BuildContext context) {
+    final habits = ref.watch(habitNotifierProvider);
+    final completions = ref.watch(completionNotifierProvider);
+
+    final dateKey = DateFormat('yyyy-MM-dd').format(_selectedDate);
+    final dayCompletions = completions[dateKey] ?? {};
+
+    // Filter by category
+    final filteredHabits = habits.where((h) => _selectedCategory == 'All' || h.category == _selectedCategory).toList();
+
+    // Calculate progress
+    int completedCount = 0;
+    for (var h in filteredHabits) {
+      if (dayCompletions[h.id]?.status == 1) completedCount++;
+    }
+    double progress = filteredHabits.isEmpty ? 0 : completedCount / filteredHabits.length;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
@@ -33,15 +52,17 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             color: AppColors.primary,
             borderRadius: BorderRadius.circular(20),
           ),
-          child: const Text(
-            'Today',
-            style: TextStyle(color: Colors.white, fontSize: 14),
+          child: Text(
+            DateFormat('MMMM d').format(_selectedDate),
+            style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ),
         actions: [
           IconButton(
             icon: const Icon(Icons.calendar_today_outlined),
-            onPressed: () {},
+            onPressed: () {
+              setState(() => _selectedDate = DateTime.now()); // reset to today
+            },
           )
         ],
       ),
@@ -73,15 +94,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     'Progress',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  const Text(
-                    '57%',
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                  Text(
+                    '${(progress * 100).toInt()}%',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ],
               ),
               const SizedBox(height: 8),
               LinearProgressIndicator(
-                value: 0.57,
+                value: progress,
                 backgroundColor: AppColors.neutral,
                 valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
                 minHeight: 8,
@@ -89,86 +110,55 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
               const SizedBox(height: 24),
               
-              // Dummy data matching the design since we don't have all the Riverpod providers wired up perfectly for tasks yet
-              HabitTaskCard(
-                title: 'Drink Water',
-                type: 'Habit',
-                time: '08:00 AM',
-                icon: Icons.local_drink,
-                iconColor: AppColors.habitRed,
-                iconBgColor: AppColors.habitRedBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: BoxDecoration(color: AppColors.neutral.withOpacity(0.5), shape: BoxShape.circle),
-                ),
-              ),
-              HabitTaskCard(
-                title: 'Avoid Junk Food',
-                type: 'Habit',
-                time: '09:00 AM',
-                icon: Icons.fastfood,
-                iconColor: AppColors.habitGreen,
-                iconBgColor: AppColors.habitGreenBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: const BoxDecoration(color: AppColors.failure, shape: BoxShape.circle),
-                  child: const Icon(Icons.close, color: Colors.white, size: 16),
-                ),
-              ),
-              HabitTaskCard(
-                title: 'Read Pages',
-                type: 'Habit',
-                time: '12:00 PM',
-                extraTag: '3/5 PAGES',
-                icon: Icons.menu_book,
-                iconColor: AppColors.habitPink,
-                iconBgColor: AppColors.habitPinkBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: const BoxDecoration(color: AppColors.skipped, shape: BoxShape.circle),
-                  child: const Icon(Icons.more_horiz, color: Colors.white, size: 16),
-                ),
-              ),
-              HabitTaskCard(
-                title: 'Workout Session',
-                type: 'Habit',
-                time: '05:00 PM',
-                extraTag: '1 min 39 secs',
-                icon: Icons.fitness_center,
-                iconColor: AppColors.habitBlue,
-                iconBgColor: AppColors.habitBlueBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-              ),
-              HabitTaskCard(
-                title: 'Doctor Appointment',
-                type: 'Task',
-                time: '07:00 PM',
-                icon: Icons.medical_services,
-                iconColor: AppColors.habitRed,
-                iconBgColor: AppColors.habitRedBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-              ),
-              HabitTaskCard(
-                title: 'Call parents Weekly',
-                type: 'Periodic task',
-                time: '07:00 PM',
-                icon: Icons.home,
-                iconColor: AppColors.habitPurple,
-                iconBgColor: AppColors.habitPurpleBg,
-                statusIcon: Container(
-                  width: 24, height: 24,
-                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
-                  child: const Icon(Icons.check, color: Colors.white, size: 16),
-                ),
-              ),
+              if (filteredHabits.isEmpty)
+                const Center(child: Text('No habits found for this category.'))
+              else
+                ...filteredHabits.map((habit) {
+                  final status = dayCompletions[habit.id]?.status ?? 0;
+                  Widget statusIcon;
+                  if (status == 1) {
+                    statusIcon = Container(
+                      width: 24, height: 24,
+                      decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                      child: const Icon(Icons.check, color: Colors.white, size: 16),
+                    );
+                  } else if (status == 2) {
+                    statusIcon = Container(
+                      width: 24, height: 24,
+                      decoration: const BoxDecoration(color: AppColors.failure, shape: BoxShape.circle),
+                      child: const Icon(Icons.close, color: Colors.white, size: 16),
+                    );
+                  } else if (status == 3) {
+                    statusIcon = Container(
+                      width: 24, height: 24,
+                      decoration: const BoxDecoration(color: AppColors.skipped, shape: BoxShape.circle),
+                      child: const Icon(Icons.more_horiz, color: Colors.white, size: 16),
+                    );
+                  } else {
+                    statusIcon = Container(
+                      width: 24, height: 24,
+                      decoration: BoxDecoration(border: Border.all(color: AppColors.neutral, width: 2), shape: BoxShape.circle),
+                    );
+                  }
+
+                  return InkWell(
+                    onTap: () {
+                      // Cycle status: 0 -> 1 -> 2 -> 3 -> 0
+                      int nextStatus = (status + 1) % 4;
+                      ref.read(completionNotifierProvider.notifier).setStatus(dateKey, habit.id, nextStatus);
+                    },
+                    child: HabitTaskCard(
+                      title: habit.name,
+                      type: 'Habit',
+                      time: habit.reminderTime ?? 'Anytime',
+                      icon: Icons.star, // default icon
+                      iconColor: Color(habit.colorValue),
+                      iconBgColor: Color(habit.bgColorValue),
+                      statusIcon: statusIcon,
+                    ),
+                  );
+                }),
+              
               const SizedBox(height: 100),
             ],
           ),

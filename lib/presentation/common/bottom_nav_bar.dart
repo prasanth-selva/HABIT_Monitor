@@ -11,10 +11,9 @@ class BottomNavBar extends StatelessWidget {
 
     int currentIndex = 0;
     if (location == '/') currentIndex = 0;
-    if (location == '/mood') currentIndex = 1;
-    // index 2 is FAB
-    if (location == '/finance') currentIndex = 3;
-    if (location == '/statistics') currentIndex = 4;
+    if (location == '/habits') currentIndex = 1;
+    if (location == '/mood') currentIndex = 2;
+    if (location == '/statistics') currentIndex = 3;
 
     return BottomAppBar(
       shape: const CircularNotchedRectangle(),
@@ -24,10 +23,10 @@ class BottomNavBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildNavItem(context, icon: Icons.calendar_today, label: 'Today', index: 0, currentIndex: currentIndex, route: '/'),
-          _buildNavItem(context, icon: Icons.emoji_emotions, label: 'Moods', index: 1, currentIndex: currentIndex, route: '/mood'),
+          _buildNavItem(context, icon: Icons.grid_view, label: 'Habits', index: 1, currentIndex: currentIndex, route: '/habits'),
           const SizedBox(width: 48), // Space for FAB
-          _buildNavItem(context, icon: Icons.account_balance_wallet, label: 'Finance', index: 3, currentIndex: currentIndex, route: '/finance'),
-          _buildNavItem(context, icon: Icons.bar_chart, label: 'Statistics', index: 4, currentIndex: currentIndex, route: '/statistics'),
+          _buildNavItem(context, icon: Icons.emoji_emotions, label: 'Moods', index: 2, currentIndex: currentIndex, route: '/mood'),
+          _buildNavItem(context, icon: Icons.bar_chart, label: 'Statistics', index: 3, currentIndex: currentIndex, route: '/statistics'),
         ],
       ),
     );

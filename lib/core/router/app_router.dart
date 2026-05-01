@@ -31,12 +31,12 @@ class AppRouter {
             builder: (context, state) => const HomeScreen(),
           ),
           GoRoute(
-            path: '/mood',
-            builder: (context, state) => const MoodScreen(),
+            path: '/habits',
+            builder: (context, state) => const MonthlyScreen(), // Habits Heatmap later
           ),
           GoRoute(
-            path: '/finance',
-            builder: (context, state) => const PlaceholderScreen(title: 'Finance'),
+            path: '/mood',
+            builder: (context, state) => const MoodScreen(),
           ),
           GoRoute(
             path: '/statistics',

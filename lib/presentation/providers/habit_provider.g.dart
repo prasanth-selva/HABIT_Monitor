@@ -6,7 +6,7 @@ part of 'habit_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$localDataSourceHash() => r'1ac051b7b0a5c61ae720dd35f57d6695125760d0';
+String _$localDataSourceHash() => r'd901662c8452423f883231f64786eea18beed6d9';
 
 /// See also [localDataSource].
 @ProviderFor(localDataSource)
@@ -21,27 +21,12 @@ final localDataSourceProvider = Provider<LocalDataSource>.internal(
 );
 
 typedef LocalDataSourceRef = ProviderRef<LocalDataSource>;
-String _$habitRepositoryHash() => r'744f700a52ccaa73c4e4d248f5a56e9ca6058185';
-
-/// See also [habitRepository].
-@ProviderFor(habitRepository)
-final habitRepositoryProvider = Provider<HabitRepository>.internal(
-  habitRepository,
-  name: r'habitRepositoryProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$habitRepositoryHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef HabitRepositoryRef = ProviderRef<HabitRepository>;
-String _$habitNotifierHash() => r'251e79fcb0ec0a5a5fd5ab0a0294023376c1895e';
+String _$habitNotifierHash() => r'179bdb6e7bca3ae1dd2b503312d4c8efcdc51747';
 
 /// See also [HabitNotifier].
 @ProviderFor(HabitNotifier)
 final habitNotifierProvider =
-    AutoDisposeNotifierProvider<HabitNotifier, List<Habit>>.internal(
+    AutoDisposeNotifierProvider<HabitNotifier, List<HabitModel>>.internal(
   HabitNotifier.new,
   name: r'habitNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -51,6 +36,6 @@ final habitNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$HabitNotifier = AutoDisposeNotifier<List<Habit>>;
+typedef _$HabitNotifier = AutoDisposeNotifier<List<HabitModel>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
