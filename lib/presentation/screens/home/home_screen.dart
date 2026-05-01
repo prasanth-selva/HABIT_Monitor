@@ -1,114 +1,178 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:intl/intl.dart';
-import 'package:go_router/go_router.dart';
+import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_dimensions.dart';
-import '../../../core/utils/date_utils.dart';
-import '../../providers/habit_provider.dart';
-import '../../providers/completion_provider.dart';
-import 'widgets/habit_card.dart';
-import 'widgets/progress_ring.dart';
-import 'widgets/daily_stats_row.dart';
+import 'widgets/week_calendar_strip.dart';
+import 'widgets/category_pills.dart';
+import 'widgets/habit_task_card.dart';
 
-class HomeScreen extends ConsumerWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
-    final today = DateTime.now();
-    final todayKey = AppDateUtils.dateKey(today);
-    
-    final habits = ref.watch(habitNotifierProvider);
-    final completions = ref.watch(completionNotifierProvider);
-    final todayCompletions = completions[todayKey] ?? {};
-    
-    final completedCount = habits.where((h) => todayCompletions[h.id] == true).length;
-    final totalCount = habits.length;
-    final rate = ref.read(completionNotifierProvider.notifier).getCompletionRate(todayKey);
-    
-    int bestOverallStreak = 0;
-    for (var h in habits) {
-      final s = ref.read(completionNotifierProvider.notifier).getBestStreak(h.id);
-      if (s > bestOverallStreak) bestOverallStreak = s;
-    }
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
 
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  DateTime _selectedDate = DateTime.now();
+  String _selectedCategory = 'Other';
+
+  final _categories = ['Other', 'Health', 'Study', 'Work', 'Home', 'Art'];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Streakly', style: theme.textTheme.headlineMedium),
-            Text(
-              DateFormat('EEEE, MMMM d').format(today),
-              style: theme.textTheme.bodySmall,
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {},
+        ),
+        title: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.primary,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: const Text(
+            'Today',
+            style: TextStyle(color: Colors.white, fontSize: 14),
+          ),
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              context.push('/settings');
-            },
+            icon: const Icon(Icons.calendar_today_outlined),
+            onPressed: () {},
           )
         ],
       ),
       body: SafeArea(
-        child: habits.isEmpty 
-            ? const Center(child: Text("No habits yet. Tap + to add one!"))
-            : CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppDimensions.paddingM),
-                      child: Column(
-                        children: [
-                          DailyStatsRow(
-                            completed: completedCount,
-                            total: totalCount,
-                            rate: rate,
-                            bestStreak: bestOverallStreak,
-                          ),
-                          const SizedBox(height: AppDimensions.paddingL),
-                          ProgressRing(progress: rate),
-                          const SizedBox(height: AppDimensions.paddingL),
-                        ],
-                      ),
-                    ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimensions.paddingM),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              WeekCalendarStrip(
+                selectedDate: _selectedDate,
+                onDateSelected: (date) {
+                  setState(() => _selectedDate = date);
+                },
+              ),
+              const SizedBox(height: 16),
+              CategoryPills(
+                categories: _categories,
+                selectedCategory: _selectedCategory,
+                onCategorySelected: (cat) {
+                  setState(() => _selectedCategory = cat);
+                },
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Progress',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppDimensions.paddingM),
-                    sliver: SliverGrid(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12,
-                        mainAxisSpacing: 12,
-                        childAspectRatio: 0.85,
-                      ),
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final habit = habits[index];
-                          final isDone = todayCompletions[habit.id] == true;
-                          final streak = ref.read(completionNotifierProvider.notifier).getCurrentStreak(habit.id);
-                          
-                          return HabitCard(
-                            habit: habit,
-                            isDone: isDone,
-                            streak: streak,
-                            onToggle: () {
-                              ref.read(completionNotifierProvider.notifier).toggle(todayKey, habit.id);
-                            },
-                          ).animate().fadeIn(delay: Duration(milliseconds: index * 50)).slideY(begin: 0.2, end: 0, curve: Curves.easeOutCubic);
-                        },
-                        childCount: habits.length,
-                      ),
-                    ),
+                  const Text(
+                    '57%',
+                    style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 100)),
                 ],
               ),
+              const SizedBox(height: 8),
+              LinearProgressIndicator(
+                value: 0.57,
+                backgroundColor: AppColors.neutral,
+                valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                minHeight: 8,
+                borderRadius: BorderRadius.circular(4),
+              ),
+              const SizedBox(height: 24),
+              
+              // Dummy data matching the design since we don't have all the Riverpod providers wired up perfectly for tasks yet
+              HabitTaskCard(
+                title: 'Drink Water',
+                type: 'Habit',
+                time: '08:00 AM',
+                icon: Icons.local_drink,
+                iconColor: AppColors.habitRed,
+                iconBgColor: AppColors.habitRedBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: BoxDecoration(color: AppColors.neutral.withOpacity(0.5), shape: BoxShape.circle),
+                ),
+              ),
+              HabitTaskCard(
+                title: 'Avoid Junk Food',
+                type: 'Habit',
+                time: '09:00 AM',
+                icon: Icons.fastfood,
+                iconColor: AppColors.habitGreen,
+                iconBgColor: AppColors.habitGreenBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: const BoxDecoration(color: AppColors.failure, shape: BoxShape.circle),
+                  child: const Icon(Icons.close, color: Colors.white, size: 16),
+                ),
+              ),
+              HabitTaskCard(
+                title: 'Read Pages',
+                type: 'Habit',
+                time: '12:00 PM',
+                extraTag: '3/5 PAGES',
+                icon: Icons.menu_book,
+                iconColor: AppColors.habitPink,
+                iconBgColor: AppColors.habitPinkBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: const BoxDecoration(color: AppColors.skipped, shape: BoxShape.circle),
+                  child: const Icon(Icons.more_horiz, color: Colors.white, size: 16),
+                ),
+              ),
+              HabitTaskCard(
+                title: 'Workout Session',
+                type: 'Habit',
+                time: '05:00 PM',
+                extraTag: '1 min 39 secs',
+                icon: Icons.fitness_center,
+                iconColor: AppColors.habitBlue,
+                iconBgColor: AppColors.habitBlueBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
+                ),
+              ),
+              HabitTaskCard(
+                title: 'Doctor Appointment',
+                type: 'Task',
+                time: '07:00 PM',
+                icon: Icons.medical_services,
+                iconColor: AppColors.habitRed,
+                iconBgColor: AppColors.habitRedBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
+                ),
+              ),
+              HabitTaskCard(
+                title: 'Call parents Weekly',
+                type: 'Periodic task',
+                time: '07:00 PM',
+                icon: Icons.home,
+                iconColor: AppColors.habitPurple,
+                iconBgColor: AppColors.habitPurpleBg,
+                statusIcon: Container(
+                  width: 24, height: 24,
+                  decoration: const BoxDecoration(color: AppColors.success, shape: BoxShape.circle),
+                  child: const Icon(Icons.check, color: Colors.white, size: 16),
+                ),
+              ),
+              const SizedBox(height: 100),
+            ],
+          ),
+        ),
       ),
     );
   }
