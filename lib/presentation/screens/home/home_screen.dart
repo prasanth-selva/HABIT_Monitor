@@ -150,11 +150,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     child: HabitTaskCard(
                       title: habit.name,
                       type: 'Habit',
-                      time: habit.reminderTime ?? 'Anytime',
-                      icon: Icons.star, // default icon
+                      time: habit.frequency ?? 'Daily',
+                      icon: habit.icon, // Passing the emoji string
                       iconColor: Color(habit.colorValue),
                       iconBgColor: Color(habit.bgColorValue),
                       statusIcon: statusIcon,
+                      onDelete: () {
+                        ref.read(habitNotifierProvider.notifier).deleteHabit(habit.id);
+                      },
+                      onArchive: () {
+                        ref.read(habitNotifierProvider.notifier).archiveHabit(habit.id);
+                      },
+                      onEdit: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Edit habit coming soon!')),
+                        );
+                      },
                     ),
                   );
                 }),

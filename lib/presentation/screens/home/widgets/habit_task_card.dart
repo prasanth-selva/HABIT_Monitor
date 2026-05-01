@@ -7,7 +7,7 @@ class HabitTaskCard extends StatelessWidget {
   final String type; // 'Habit', 'Task', 'Periodic task'
   final String time;
   final String? extraTag;
-  final IconData icon;
+  final String icon;
   final Color iconColor;
   final Color iconBgColor;
   final Widget statusIcon;
@@ -22,7 +22,14 @@ class HabitTaskCard extends StatelessWidget {
     required this.iconColor,
     required this.iconBgColor,
     required this.statusIcon,
+    this.onEdit,
+    this.onDelete,
+    this.onArchive,
   });
+
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
+  final VoidCallback? onArchive;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +56,12 @@ class HabitTaskCard extends StatelessWidget {
               color: iconBgColor,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
             ),
-            child: Icon(icon, color: iconColor),
+            child: Center(
+              child: Text(
+                icon,
+                style: const TextStyle(fontSize: 24),
+              ),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -58,7 +70,7 @@ class HabitTaskCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 16, color: Colors.black87),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -74,7 +86,19 @@ class HabitTaskCard extends StatelessWidget {
           ),
           statusIcon,
           const SizedBox(width: 8),
-          const Icon(Icons.more_vert, color: AppColors.textSecondary),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
+            onSelected: (value) {
+              if (value == 'edit' && onEdit != null) onEdit!();
+              if (value == 'delete' && onDelete != null) onDelete!();
+              if (value == 'archive' && onArchive != null) onArchive!();
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'edit', child: Text('Edit')),
+              const PopupMenuItem(value: 'archive', child: Text('Archive')),
+              const PopupMenuItem(value: 'delete', child: Text('Delete', style: TextStyle(color: Colors.red))),
+            ],
+          ),
         ],
       ),
     );

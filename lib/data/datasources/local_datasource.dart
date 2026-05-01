@@ -16,16 +16,30 @@ class LocalDataSource {
   Box<MoodEntryModel> get moodBox => Hive.box<MoodEntryModel>(moodEntryBoxName);
 
   Future<void> init() async {
-    if (!Hive.isBoxOpen(habitBoxName)) {
+    try {
+      if (!Hive.isBoxOpen(habitBoxName)) {
+        await Hive.openBox<HabitModel>(habitBoxName);
+      }
+      if (!Hive.isBoxOpen(taskBoxName)) {
+        await Hive.openBox<TaskModel>(taskBoxName);
+      }
+      if (!Hive.isBoxOpen(completionBoxName)) {
+        await Hive.openBox<CompletionModel>(completionBoxName);
+      }
+      if (!Hive.isBoxOpen(moodEntryBoxName)) {
+        await Hive.openBox<MoodEntryModel>(moodEntryBoxName);
+      }
+    } catch (e) {
+      // Clear data if there's a schema mismatch (e.g. during dev/refactor)
+      await Hive.deleteBoxFromDisk(habitBoxName);
+      await Hive.deleteBoxFromDisk(taskBoxName);
+      await Hive.deleteBoxFromDisk(completionBoxName);
+      await Hive.deleteBoxFromDisk(moodEntryBoxName);
+      
+      // Re-open
       await Hive.openBox<HabitModel>(habitBoxName);
-    }
-    if (!Hive.isBoxOpen(taskBoxName)) {
       await Hive.openBox<TaskModel>(taskBoxName);
-    }
-    if (!Hive.isBoxOpen(completionBoxName)) {
       await Hive.openBox<CompletionModel>(completionBoxName);
-    }
-    if (!Hive.isBoxOpen(moodEntryBoxName)) {
       await Hive.openBox<MoodEntryModel>(moodEntryBoxName);
     }
   }

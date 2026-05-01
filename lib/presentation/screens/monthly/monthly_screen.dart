@@ -29,18 +29,39 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
       );
     }
 
-    _selectedHabitId ??= habits.first.id;
-    final selectedHabit = habits.firstWhere((h) => h.id == _selectedHabitId);
+    _selectedHabitId ??= 'overview';
+    final selectedHabitColor = _selectedHabitId == 'overview' 
+      ? Theme.of(context).colorScheme.primary 
+      : Color(habits.firstWhere((h) => h.id == _selectedHabitId).colorValue);
 
-    // Extract completions for the selected habit for this month
-    final Map<String, bool> habitCompletions = {};
-    allCompletions.forEach((dateKey, dayCompletions) {
-      if (dateKey.startsWith("${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}")) {
-        if (dayCompletions[_selectedHabitId]?.status == 1) {
-          habitCompletions[dateKey] = true;
+    // Calculate completions
+    final Map<String, int> dayStates = {};
+    
+    if (_selectedHabitId == 'overview') {
+      allCompletions.forEach((dateKey, dayCompletions) {
+        if (dateKey.startsWith("${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}")) {
+          int done = 0;
+          for (var habit in habits) {
+            if (dayCompletions[habit.id]?.status == 1) done++;
+          }
+          if (done == habits.length && habits.isNotEmpty) {
+            dayStates[dateKey] = 1; // Perfect
+          } else if (done == 0 && habits.isNotEmpty) {
+            dayStates[dateKey] = 2; // Critical
+          } else if (done > 0) {
+            dayStates[dateKey] = 3; // Partial
+          }
         }
-      }
-    });
+      });
+    } else {
+      allCompletions.forEach((dateKey, dayCompletions) {
+        if (dateKey.startsWith("${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}")) {
+          if (dayCompletions[_selectedHabitId]?.status == 1) {
+            dayStates[dateKey] = 3; // Use partial color (habit color) for specific habit completions
+          }
+        }
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -56,26 +77,43 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Row(
-                  children: habits.map((h) {
-                    final isSelected = h.id == _selectedHabitId;
-                    return Padding(
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.only(right: 8),
                       child: ChoiceChip(
-                        label: Text('${h.icon} ${h.name}'),
-                        selected: isSelected,
+                        label: const Text('📊 Overview'),
+                        selected: _selectedHabitId == 'overview',
                         onSelected: (selected) {
-                          if (selected) {
-                            setState(() => _selectedHabitId = h.id);
-                          }
+                          if (selected) setState(() => _selectedHabitId = 'overview');
                         },
-                        selectedColor: Color(h.colorValue).withOpacity(0.2),
+                        selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
                         labelStyle: TextStyle(
-                          color: isSelected ? Color(h.colorValue) : Theme.of(context).colorScheme.onSurface,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          color: _selectedHabitId == 'overview' ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.onSurface,
+                          fontWeight: _selectedHabitId == 'overview' ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
-                    );
-                  }).toList(),
+                    ),
+                    ...habits.map((h) {
+                      final isSelected = h.id == _selectedHabitId;
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: ChoiceChip(
+                          label: Text('${h.icon} ${h.name}'),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            if (selected) {
+                              setState(() => _selectedHabitId = h.id);
+                            }
+                          },
+                          selectedColor: Color(h.colorValue).withOpacity(0.2),
+                          labelStyle: TextStyle(
+                            color: isSelected ? Color(h.colorValue) : Theme.of(context).colorScheme.onSurface,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ],
                 ),
               ),
               const SizedBox(height: 24),
@@ -110,8 +148,8 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
               
               HabitCalendar(
                 month: _currentMonth,
-                completions: habitCompletions,
-                activeColor: Color(selectedHabit.colorValue),
+                dayStates: dayStates,
+                activeColor: selectedHabitColor,
               ),
             ],
           ),

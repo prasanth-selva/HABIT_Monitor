@@ -8,6 +8,7 @@ import '../../../data/models/habit_model.dart';
 import '../../providers/habit_provider.dart';
 import 'widgets/color_picker_row.dart';
 import 'widgets/icon_picker_grid.dart';
+import 'package:intl/intl.dart';
 
 class AddHabitSheet extends ConsumerStatefulWidget {
   const AddHabitSheet({super.key});
@@ -44,12 +45,14 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
 
   late Color _selectedColor;
   late String _selectedIcon;
+  late DateTime _selectedStartDate;
 
   @override
   void initState() {
     super.initState();
     _selectedColor = _colors[0];
     _selectedIcon = _icons[0];
+    _selectedStartDate = DateTime.now();
   }
 
   @override
@@ -71,7 +74,7 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
       category: 'Other', // default category
       frequency: 'daily', // default frequency
       sortOrder: ref.read(habitNotifierProvider).length,
-      createdAt: DateTime.now(),
+      createdAt: _selectedStartDate,
     );
 
     ref.read(habitNotifierProvider.notifier).addHabit(habit);
@@ -151,6 +154,41 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
               colors: _colors,
               selectedColor: _selectedColor,
               onColorSelected: (color) => setState(() => _selectedColor = color),
+            ),
+            
+            const SizedBox(height: 24),
+            Text('Start Date', style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+            const SizedBox(height: 12),
+            InkWell(
+              onTap: () async {
+                final date = await showDatePicker(
+                  context: context,
+                  initialDate: _selectedStartDate,
+                  firstDate: DateTime(2020),
+                  lastDate: DateTime(2030),
+                );
+                if (date != null) {
+                  setState(() => _selectedStartDate = date);
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest?.withOpacity(0.3) ?? theme.colorScheme.surface,
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMD),
+                  border: Border.all(color: theme.dividerColor.withOpacity(0.2)),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: theme.colorScheme.primary),
+                    const SizedBox(width: 16),
+                    Text(
+                      DateFormat('MMMM d, yyyy').format(_selectedStartDate),
+                      style: theme.textTheme.titleMedium,
+                    ),
+                  ],
+                ),
+              ),
             ),
             
             const SizedBox(height: 32),

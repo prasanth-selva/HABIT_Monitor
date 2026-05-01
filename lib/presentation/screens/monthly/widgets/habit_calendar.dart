@@ -4,13 +4,13 @@ import '../../../../core/utils/date_utils.dart';
 
 class HabitCalendar extends StatelessWidget {
   final DateTime month;
-  final Map<String, bool> completions;
+  final Map<String, int> dayStates; // 1: Perfect, 2: Critical, 3: Partial
   final Color activeColor;
 
   const HabitCalendar({
     super.key,
     required this.month,
-    required this.completions,
+    required this.dayStates,
     required this.activeColor,
   });
 
@@ -40,13 +40,17 @@ class HabitCalendar extends StatelessWidget {
         final day = index - offset + 1;
         final currentDay = DateTime(month.year, month.month, day);
         final dateKey = AppDateUtils.dateKey(currentDay);
-        final isDone = completions[dateKey] == true;
+        final state = dayStates[dateKey] ?? 0;
+        final hasData = state > 0;
         final isToday = AppDateUtils.isSameDay(currentDay, DateTime.now());
         final isFuture = currentDay.isAfter(DateTime.now());
 
         return Container(
           decoration: BoxDecoration(
-            color: isDone ? activeColor : (isFuture ? Colors.transparent : Theme.of(context).dividerColor.withOpacity(0.1)),
+            color: state == 1 ? const Color(0xFF4CAF50) : // Success
+                   state == 2 ? const Color(0xFFF44336) : // Failure/Critical
+                   state == 3 ? activeColor : 
+                   (isFuture ? Colors.transparent : Theme.of(context).dividerColor.withOpacity(0.1)),
             borderRadius: BorderRadius.circular(AppDimensions.radiusSM),
             border: isToday
                 ? Border.all(color: activeColor, width: 2)
@@ -56,7 +60,7 @@ class HabitCalendar extends StatelessWidget {
           child: Text(
             '$day',
             style: TextStyle(
-              color: isDone ? Colors.white : (isFuture ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.onSurface),
+              color: hasData ? Colors.white : (isFuture ? Theme.of(context).disabledColor : Theme.of(context).colorScheme.onSurface),
               fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
             ),
           ),

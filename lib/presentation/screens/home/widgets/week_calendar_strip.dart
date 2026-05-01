@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:table_calendar/table_calendar.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class WeekCalendarStrip extends StatelessWidget {
@@ -14,49 +14,41 @@ class WeekCalendarStrip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get start of week (Sunday)
-    final startOfWeek = selectedDate.subtract(Duration(days: selectedDate.weekday % 7));
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: List.generate(7, (index) {
-          final date = startOfWeek.add(Duration(days: index));
-          final isSelected = date.year == selectedDate.year && date.month == selectedDate.month && date.day == selectedDate.day;
-
-          return GestureDetector(
-            onTap: () => onDateSelected(date),
-            child: Column(
-              children: [
-                Text(
-                  DateFormat('E').format(date),
-                  style: TextStyle(
-                    color: isSelected ? AppColors.primary : AppColors.textSecondary,
-                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: isSelected ? AppColors.primary : Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${date.day}',
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : AppColors.textSecondary,
-                      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }),
+    return TableCalendar(
+      firstDay: DateTime.utc(2020, 1, 1),
+      lastDay: DateTime.utc(2030, 12, 31),
+      focusedDay: selectedDate,
+      currentDay: DateTime.now(),
+      calendarFormat: CalendarFormat.week,
+      startingDayOfWeek: StartingDayOfWeek.sunday,
+      headerStyle: const HeaderStyle(
+        formatButtonVisible: false,
+        titleCentered: true,
+        leftChevronVisible: false,
+        rightChevronVisible: false,
+        headerPadding: EdgeInsets.zero,
+        titleTextStyle: TextStyle(fontSize: 0), // Hide the month/year header because we have it in the AppBar
+      ),
+      selectedDayPredicate: (day) {
+        return isSameDay(selectedDate, day);
+      },
+      onDaySelected: (selectedDay, focusedDay) {
+        onDateSelected(selectedDay);
+      },
+      calendarStyle: CalendarStyle(
+        isTodayHighlighted: true,
+        selectedDecoration: const BoxDecoration(
+          color: AppColors.primary,
+          shape: BoxShape.circle,
+        ),
+        todayDecoration: BoxDecoration(
+          color: AppColors.primary.withOpacity(0.3),
+          shape: BoxShape.circle,
+        ),
+      ),
+      daysOfWeekStyle: const DaysOfWeekStyle(
+        weekdayStyle: TextStyle(color: AppColors.textSecondary),
+        weekendStyle: TextStyle(color: AppColors.textSecondary),
       ),
     );
   }
