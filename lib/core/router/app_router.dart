@@ -5,6 +5,7 @@ import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/monthly/monthly_screen.dart';
 import '../../presentation/screens/yearly/yearly_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
+import '../../presentation/screens/mood/mood_screen.dart';
 
 class PlaceholderScreen extends StatelessWidget {
   final String title;
@@ -31,7 +32,7 @@ class AppRouter {
           ),
           GoRoute(
             path: '/mood',
-            builder: (context, state) => const PlaceholderScreen(title: 'Moods'),
+            builder: (context, state) => const MoodScreen(),
           ),
           GoRoute(
             path: '/finance',
