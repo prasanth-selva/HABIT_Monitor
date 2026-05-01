@@ -1,47 +1,78 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_colors.dart';
-import '../constants/app_typography.dart';
 
 class AppTheme {
   static ThemeData light() {
     return ThemeData(
       brightness: Brightness.light,
-      scaffoldBackgroundColor: AppColors.bgLight,
+      scaffoldBackgroundColor: AppColors.background,
       colorScheme: const ColorScheme.light(
-        primary: AppColors.coral,
-        secondary: AppColors.ocean,
-        surface: AppColors.surfaceLight,
-        onSurface: AppColors.textLight,
+        primary: AppColors.primary,
+        secondary: AppColors.primary,
+        surface: AppColors.surface,
+        onSurface: AppColors.text,
       ),
       textTheme: TextTheme(
-        headlineLarge: AppTypography.headingXL.copyWith(color: AppColors.textLight),
-        headlineMedium: AppTypography.headingL.copyWith(color: AppColors.textLight),
-        bodyMedium: AppTypography.bodyM.copyWith(color: AppColors.textLight),
-        bodySmall: AppTypography.bodyS.copyWith(color: AppColors.text2Light),
-        labelMedium: AppTypography.labelM.copyWith(color: AppColors.textLight),
+        headlineLarge: GoogleFonts.dmSans(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.text),
+        headlineMedium: GoogleFonts.dmSans(fontSize: 24, fontWeight: FontWeight.bold, color: AppColors.text),
+        titleLarge: GoogleFonts.dmSans(fontSize: 18, fontWeight: FontWeight.w600, color: AppColors.text),
+        bodyLarge: GoogleFonts.dmSans(fontSize: 16, color: AppColors.text),
+        bodyMedium: GoogleFonts.dmSans(fontSize: 14, color: AppColors.text),
+        bodySmall: GoogleFonts.dmSans(fontSize: 12, color: AppColors.textSecondary),
+        labelMedium: GoogleFonts.dmSans(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
       ),
       useMaterial3: true,
+      cardTheme: CardTheme(
+        color: AppColors.surface,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: AppColors.text),
+        titleTextStyle: TextStyle(color: AppColors.text, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
   static ThemeData dark() {
+    // The design images only show a light pastel theme. 
+    // We will map dark to the same or a slightly darker pastel version if needed, 
+    // but for now, we'll keep it simple and use a basic dark mode or force light mode.
     return ThemeData(
       brightness: Brightness.dark,
-      scaffoldBackgroundColor: AppColors.bgDark,
+      scaffoldBackgroundColor: const Color(0xFF1A1A1A),
       colorScheme: const ColorScheme.dark(
-        primary: AppColors.coral,
-        secondary: AppColors.ocean,
-        surface: AppColors.surfaceDark,
-        onSurface: AppColors.textDark,
+        primary: AppColors.primary,
+        secondary: AppColors.primary,
+        surface: Color(0xFF2D2D2D),
+        onSurface: Colors.white,
       ),
       textTheme: TextTheme(
-        headlineLarge: AppTypography.headingXL.copyWith(color: AppColors.textDark),
-        headlineMedium: AppTypography.headingL.copyWith(color: AppColors.textDark),
-        bodyMedium: AppTypography.bodyM.copyWith(color: AppColors.textDark),
-        bodySmall: AppTypography.bodyS.copyWith(color: AppColors.text2Dark),
-        labelMedium: AppTypography.labelM.copyWith(color: AppColors.textDark),
+        headlineLarge: GoogleFonts.dmSans(fontSize: 32, fontWeight: FontWeight.bold, color: Colors.white),
+        headlineMedium: GoogleFonts.dmSans(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
+        titleLarge: GoogleFonts.dmSans(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.white),
+        bodyLarge: GoogleFonts.dmSans(fontSize: 16, color: Colors.white),
+        bodyMedium: GoogleFonts.dmSans(fontSize: 14, color: Colors.white),
+        bodySmall: GoogleFonts.dmSans(fontSize: 12, color: Colors.grey),
+        labelMedium: GoogleFonts.dmSans(fontSize: 12, fontWeight: FontWeight.bold, color: Colors.grey),
       ),
       useMaterial3: true,
+      cardTheme: CardTheme(
+        color: const Color(0xFF2D2D2D),
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white),
+        titleTextStyle: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+      ),
     );
   }
 }
