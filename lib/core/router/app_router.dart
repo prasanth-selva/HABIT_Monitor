@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 import '../../presentation/common/app_scaffold.dart';
 import '../../presentation/screens/home/home_screen.dart';
 import '../../presentation/screens/monthly/monthly_screen.dart';
-import '../../presentation/screens/yearly/yearly_screen.dart';
 import '../../presentation/screens/settings/settings_screen.dart';
 import '../../presentation/screens/mood/mood_screen.dart';
+import '../../presentation/screens/statistics/stats_screen.dart';
 
 class PlaceholderScreen extends StatelessWidget {
   final String title;
@@ -40,7 +40,7 @@ class AppRouter {
           ),
           GoRoute(
             path: '/statistics',
-            builder: (context, state) => const YearlyScreen(), // Map to existing statistics screen
+            builder: (context, state) => const StatsScreen(),
           ),
         ],
       ),
