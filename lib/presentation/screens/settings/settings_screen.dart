@@ -1,13 +1,45 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/theme/theme_provider.dart';
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(appThemeModeProvider);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
-      body: const Center(child: Text('Settings Screen')),
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: ListView(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.brightness_6),
+            title: const Text('Theme'),
+            trailing: DropdownButton<ThemeMode>(
+              value: themeMode,
+              onChanged: (ThemeMode? newMode) {
+                if (newMode != null) {
+                  ref.read(appThemeModeProvider.notifier).state = newMode;
+                }
+              },
+              items: const [
+                DropdownMenuItem(value: ThemeMode.system, child: Text('System')),
+                DropdownMenuItem(value: ThemeMode.light, child: Text('Light')),
+                DropdownMenuItem(value: ThemeMode.dark, child: Text('Dark')),
+              ],
+            ),
+          ),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.info_outline),
+            title: const Text('About'),
+            subtitle: const Text('Streakly Habit Tracker v1.0.0'),
+          ),
+        ],
+      ),
     );
   }
 }
