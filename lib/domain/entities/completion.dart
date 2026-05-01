@@ -3,5 +3,9 @@ class Completion {
   final String habitId;
   final bool isDone;
 
-  Completion({required this.dateKey, required this.habitId, required this.isDone});
+  Completion({
+    required this.dateKey,
+    required this.habitId,
+    required this.isDone,
+  });
 }

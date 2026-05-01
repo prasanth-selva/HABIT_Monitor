@@ -1,34 +1,41 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:uuid/uuid.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../domain/entities/habit.dart';
+import '../../domain/repositories/habit_repository.dart';
+import '../../data/datasources/local_datasource.dart';
+import '../../data/repositories/habit_repository_impl.dart';
 
-final habitListProvider = StateNotifierProvider<HabitNotifier, List<Habit>>((ref) {
-  return HabitNotifier();
-});
+part 'habit_provider.g.dart';
 
-class HabitNotifier extends StateNotifier<List<Habit>> {
-  HabitNotifier() : super([]);
+@Riverpod(keepAlive: true)
+LocalDataSource localDataSource(LocalDataSourceRef ref) {
+  throw UnimplementedError('Initialized in main');
+}
 
-  final _uuid = const Uuid();
+@Riverpod(keepAlive: true)
+HabitRepository habitRepository(HabitRepositoryRef ref) {
+  final dataSource = ref.watch(localDataSourceProvider);
+  return HabitRepositoryImpl(dataSource);
+}
 
-  Future<void> loadInitial(List<Habit> seed) async {
-    state = seed;
+@riverpod
+class HabitNotifier extends _$HabitNotifier {
+  @override
+  List<Habit> build() {
+    return ref.watch(habitRepositoryProvider).getHabits();
   }
 
-  Future<void> addHabit(String name, String icon, int color, int bg) async {
-    final habit = Habit(
-      id: _uuid.v4(),
-      name: name,
-      icon: icon,
-      colorValue: color,
-      bgColorValue: bg,
-      sortOrder: state.length,
-      createdAt: DateTime.now(),
-    );
-    state = [...state, habit];
+  Future<void> addHabit(Habit habit) async {
+    await ref.read(habitRepositoryProvider).addHabit(habit);
+    state = ref.read(habitRepositoryProvider).getHabits();
   }
 
   Future<void> deleteHabit(String id) async {
-    state = state.where((h) => h.id != id).toList();
+    await ref.read(habitRepositoryProvider).deleteHabit(id);
+    state = ref.read(habitRepositoryProvider).getHabits();
+  }
+
+  Future<void> reorderHabits(int oldIndex, int newIndex) async {
+    await ref.read(habitRepositoryProvider).reorderHabits(oldIndex, newIndex);
+    state = ref.read(habitRepositoryProvider).getHabits();
   }
 }
