@@ -36,7 +36,7 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
     final Map<String, bool> habitCompletions = {};
     allCompletions.forEach((dateKey, dayCompletions) {
       if (dateKey.startsWith("${_currentMonth.year}-${_currentMonth.month.toString().padLeft(2, '0')}")) {
-        if (dayCompletions[_selectedHabitId] == true) {
+        if (dayCompletions[_selectedHabitId]?.status == 1) {
           habitCompletions[dateKey] = true;
         }
       }
@@ -68,9 +68,9 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
                             setState(() => _selectedHabitId = h.id);
                           }
                         },
-                        selectedColor: h.color.withOpacity(0.2),
+                        selectedColor: Color(h.colorValue).withOpacity(0.2),
                         labelStyle: TextStyle(
-                          color: isSelected ? h.color : Theme.of(context).colorScheme.onSurface,
+                          color: isSelected ? Color(h.colorValue) : Theme.of(context).colorScheme.onSurface,
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                         ),
                       ),
@@ -111,7 +111,7 @@ class _MonthlyScreenState extends ConsumerState<MonthlyScreen> {
               HabitCalendar(
                 month: _currentMonth,
                 completions: habitCompletions,
-                activeColor: selectedHabit.color,
+                activeColor: Color(selectedHabit.colorValue),
               ),
             ],
           ),

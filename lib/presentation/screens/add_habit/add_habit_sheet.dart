@@ -4,7 +4,7 @@ import 'package:uuid/uuid.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_dimensions.dart';
-import '../../../domain/entities/habit.dart';
+import '../../../data/models/habit_model.dart';
 import '../../providers/habit_provider.dart';
 import 'widgets/color_picker_row.dart';
 import 'widgets/icon_picker_grid.dart';
@@ -62,12 +62,14 @@ class _AddHabitSheetState extends ConsumerState<AddHabitSheet> {
     final name = _nameController.text.trim();
     if (name.isEmpty) return;
 
-    final habit = Habit(
+    final habit = HabitModel(
       id: const Uuid().v4(),
       name: name,
       icon: _selectedIcon,
-      color: _selectedColor,
-      bgColor: _bgColors[_selectedColor]!,
+      colorValue: _selectedColor.value,
+      bgColorValue: _bgColors[_selectedColor]!.value,
+      category: 'Other', // default category
+      frequency: 'daily', // default frequency
       sortOrder: ref.read(habitNotifierProvider).length,
       createdAt: DateTime.now(),
     );

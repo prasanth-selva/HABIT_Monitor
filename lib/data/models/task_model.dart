@@ -1,9 +1,8 @@
 import 'package:hive/hive.dart';
-import '../../domain/entities/task.dart';
 
 part 'task_model.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 1)
 class TaskModel extends HiveObject {
   @HiveField(0)
   final String id;
@@ -35,28 +34,4 @@ class TaskModel extends HiveObject {
     this.time,
     required this.createdAt,
   });
-
-  factory TaskModel.fromEntity(AppTask entity) {
-    return TaskModel(
-      id: entity.id,
-      title: entity.title,
-      dueDate: entity.dueDate,
-      isCompleted: entity.isCompleted,
-      type: entity.type,
-      time: entity.time,
-      createdAt: entity.createdAt,
-    );
-  }
-
-  AppTask toEntity() {
-    return AppTask(
-      id: id,
-      title: title,
-      dueDate: dueDate,
-      isCompleted: isCompleted,
-      type: type,
-      time: time,
-      createdAt: createdAt,
-    );
-  }
 }
